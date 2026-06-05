@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
+import os
+
+# Read APP_NAME from Environment Variable
+APP_NAME = os.getenv("APP_NAME", "Age Classification API")
 
 app = FastAPI(
-    title="Age Classification API",
+    title=APP_NAME,
     description="Classifies a person's age group",
     version="1.0"
 )
@@ -14,11 +18,13 @@ class PredictionResponse(BaseModel):
     age: int
     category: str
 
-@app.get('/')
+@app.get("/")
 def home():
-    return {"message": "Welcome Age Classification API"}
+    return {
+        "message": f"Welcome to {APP_NAME}"
+    }
 
-@app.post('/predict', response_model=PredictionResponse)
+@app.post("/predict", response_model=PredictionResponse)
 def predict(data: UserInput):
 
     age = data.age
